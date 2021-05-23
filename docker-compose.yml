@@ -1,0 +1,32 @@
+version: '3.8'
+  
+services: 
+  db:
+    container_name: database
+    image: postgis/postgis
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: QG3QhfJtwdjMBb3NoKnq6BsgN8g2wOM0NaEe6S3GO0D5Rl
+      POSTGRES_DB: database
+      POSTGRES_MULTIPLE_EXTENSIONS: postgis,hstore,postgis_topology,postgis_raster,pgrouting
+    ports:
+      - "5432:5432"
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: johannes@x.com
+      PGADMIN_DEFAULT_PASSWORD: VO8SUcFwsRPjCTsyu7byABcVRCkQHiGQO87fWTy07SArMu
+    ports:
+      - "5050:80"
+  geoserver:
+    container_name: geoserver
+    image: kartoza/geoserver:2.19.0
+    hostname: geoserver
+    restart: always
+    ports:
+      - "8080:8080"
+    links:
+      - db:database
