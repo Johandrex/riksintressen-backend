@@ -25,10 +25,10 @@ Skapare: Johannes Seldevall, Sebastian Sjöberg och Wibke Du Rietz.
 
 ### PostgreSQL database
 importera databasen
-* docker exec -i database /bin/bash -c "PGPASSWORD=QG3QhfJtwdjMBb3NoKnq6BsgN8g2wOM0NaEe6S3GO0D5Rl psql --username root database" < backup.sql
+    docker exec -i database /bin/bash -c "PGPASSWORD=QG3QhfJtwdjMBb3NoKnq6BsgN8g2wOM0NaEe6S3GO0D5Rl psql --username root database" < backup.sql
 
 exportering av databasen görs med kommandot nedanför
-* docker exec -i database /bin/bash -c "PGPASSWORD=QG3QhfJtwdjMBb3NoKnq6BsgN8g2wOM0NaEe6S3GO0D5Rl pg_dump --username root database" > backup.sql
+    docker exec -i database /bin/bash -c "PGPASSWORD=QG3QhfJtwdjMBb3NoKnq6BsgN8g2wOM0NaEe6S3GO0D5Rl pg_dump --username root database" > backup.sql
 
 ### PgAdmin4
 1. Logga in med användaruppgifterna som finns i "docker-compose.yml"
@@ -37,7 +37,7 @@ exportering av databasen görs med kommandot nedanför
 
 ### GeoServer
 importering av geoserverns data (host till container)
-* docker cp geoserver geoserver:/usr/local/tomcat/data
+    docker cp geoserver geoserver:/usr/local/tomcat/data
 
 exportering geoserverns data (container till host)
-* docker cp geoserver:/usr/local/tomcat/data geoserver
+    docker cp geoserver:/usr/local/tomcat/data geoserver
