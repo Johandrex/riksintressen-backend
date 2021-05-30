@@ -21,4 +21,23 @@ Skapare: Johannes Seldevall, Sebastian Sjöberg och Wibke Du Rietz.
 2. klona repository med kommandot "git clone https://Johandrex@bitbucket.org/Johandrex/riksintressen-backend.git"
 3. gå in i repository mappen "cd riksintressen-backend"
 4. starta applikationen med "docker-compose up"
-5. Ifall det är första gången applikationen körs behöver konfigurationsfilerna över pgadmin4 och geoservern importeras, sedan behöver databas backupen  återskapas i den nyskapade databasen.
+5. Ifall det är första gången applikationen körs följ stegen i nästkommande avsnitt.
+
+### PostgreSQL database
+importera databasen
+* docker exec -i database /bin/bash -c "PGPASSWORD=QG3QhfJtwdjMBb3NoKnq6BsgN8g2wOM0NaEe6S3GO0D5Rl psql --username root database" < backup.sql
+
+exportering av databasen görs med kommandot nedanför
+* docker exec -i database /bin/bash -c "PGPASSWORD=QG3QhfJtwdjMBb3NoKnq6BsgN8g2wOM0NaEe6S3GO0D5Rl pg_dump --username root database" > backup.sql
+
+### PgAdmin4
+1. Logga in med användaruppgifterna som finns i "docker-compose.yml"
+2. Tryck på "Add New Server"
+3. Fyll i PostgreSQL uppgifterna som finns i "docker-compose.yml"
+
+### GeoServer
+importering av geoserverns data (host till container)
+* docker cp geoserver geoserver:/usr/local/tomcat/data
+
+exportering geoserverns data (container till host)
+* docker cp geoserver:/usr/local/tomcat/data geoserver
