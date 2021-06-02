@@ -1,23 +1,47 @@
-**This is a mock repository.** 
+# riksintressen-backend
 
-The aim of this repository is to report in GitHub contributions coming from other platforms.
+Backend delen består utav postgresql databasen som går att komma åt via pgadmin4. Databasen har pluginet PostGIS vars uppgift är att lagra spatial data av riksintressen, den spatiala datan visas i frontend genom geoservern vars uppgift är att fungera som en länk mellan databasen och frontend. I backend finns även vår REST API som är skapad i node.js, men den finns inte här, utan i det separata repositoryt "riksintressen-node". I detta projekt finns alltså docker-compose.yml, konfigurationsfiler från pgadmin4 och geoservern, ERD över databasen, samt en backup av databasen.
 
-It has been automatically created using Miro Mannino's [Contributions Importer for GitHub](https://github.com/miromannino/contributions-importer-for-github)
+pgadmin4, postgresql och geoservern installeras automatiskt via docker-compose.yml. Så det enda som behöver installeras är docker applikationen, när det är installerat går det att starta docker-compose.yml via kommandot "docker-compose up" via terminalen när man befinner sig i mappen där filen finns.
 
-## Notice
+När docker-compose.yml har startat startas applikationerna, kan andra datorer komma åt tjänsterna så länge det inte finns någon brandvägg som stör uppkopplingen. De sidor som går att komma åt finns listade nedanför. Localhost ska bytas ut mot användarens IP-addressen för att andra ska komma åt tjänsten.
+* localhost:5432 - databasen "database" som går att komma åt via lösenordet i konfigurationsfilen och användaren "root".
+* http://localhost:5050/ - webbapplikation som hanterar databaser, här kan databasen läggas till för att hantera den via SQL-queries.
+* http://localhost:8080/geoserver/web/ - geoservern, fungerar som en länk mellan databasens spatiala data och webbsidan.
 
-The content of this repository contains mock code. This prevents private source code to be leaked. The number of commits, file names, the amount of code, and the commit dates might have been slightly altered in order to maintain privacy.
+## information
 
-Notice that the statistics coming from this repository are not in any way complete. Commits only come from other selected git repositories. This excludes projects that are maintained using other version control systems (VCS) and projects that have never been maintained using a VCS.
+riksintressen-backend körs i docker. Docker ansvarar för PostgreSQL, GeoServer och PgAdmin4.
 
-## Reasons
+Skapare: Johannes Seldevall, Sebastian Sjöberg och Wibke Du Rietz.
 
-GitHub shows contributions statistics of its users. There are [several reasons](https://github.com/isaacs/github/issues/627) why this feature could be debatable.
+## installation
 
-Moreover, this mechanism only rewards developers that work in companies that host projects on GitHub.
+1. installera docker från sajten "https://docs.docker.com/get-docker/"
+2. klona repository med kommandot "git clone https://Johandrex@bitbucket.org/Johandrex/riksintressen-backend.git"
+3. gå in i repository mappen "cd riksintressen-backend"
+4. starta applikationen med "docker-compose up"
+5. Ifall det är första gången applikationen körs följ stegen i nästkommande avsnitt.
 
-Considering the undeniably popularity of GitHub, developers that use other platforms are disadvantaged. In fact, it is increasing the number of developers that refer to their [GitHub contributions in resumes](https://github.com/resume/resume.github.com). Similarly, recruiters [may use GitHub to find talents](https://www.socialtalent.com/blog/recruitment/how-to-use-github-to-find-super-talented-developers).
+### PostgreSQL database
+importera databasen
 
-In more extreme cases, some developers decided to boycott this GitHub's lock-in system, and developed tools that can alter GitHub's contribution graph with fake commits: [Rockstar](https://github.com/avinassh/rockstar) and [Vanity text for GitHub](https://github.com/ihabunek/github-vanity) are good examples. 
+    docker exec -i database /bin/bash -c "PGPASSWORD=QG3QhfJtwdjMBb3NoKnq6BsgN8g2wOM0NaEe6S3GO0D5Rl psql --username root database" < backup.sql
 
-Instead, the aim of [Contributions Importer for GitHub](https://github.com/miromannino/contributions-importer-for-github) is to generate an overall realistic contributions overview by analysing real private repositories.
+exportering av databasen görs med kommandot nedanför
+
+    docker exec -i database /bin/bash -c "PGPASSWORD=QG3QhfJtwdjMBb3NoKnq6BsgN8g2wOM0NaEe6S3GO0D5Rl pg_dump --username root database" > backup.sql
+
+### PgAdmin4
+1. Logga in med användaruppgifterna som finns i "docker-compose.yml"
+2. Tryck på "Add New Server"
+3. Fyll i PostgreSQL uppgifterna som finns i "docker-compose.yml"
+
+### GeoServer
+importering av geoserverns data (host till container)
+
+    docker cp geoserver geoserver:/usr/local/tomcat/data
+
+exportering geoserverns data (container till host)
+
+    docker cp geoserver:/usr/local/tomcat/data geoserver
